@@ -1,0 +1,314 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "dkv.proto",
+    "version": "version not set"
+  },
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/delete": {
+      "post": {
+        "operationId": "DKV_KVDelete",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "properties": {}
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/runtimeError"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/protoKVDeleteRequest"
+            }
+          }
+        ],
+        "tags": [
+          "DKV"
+        ]
+      }
+    },
+    "/get": {
+      "post": {
+        "operationId": "DKV_KVGet",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/protoKVGetResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/runtimeError"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/protoKVGetRequest"
+            }
+          }
+        ],
+        "tags": [
+          "DKV"
+        ]
+      }
+    },
+    "/put": {
+      "post": {
+        "operationId": "DKV_KVPut",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "properties": {}
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/runtimeError"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/protoKVPutRequest"
+            }
+          }
+        ],
+        "tags": [
+          "DKV"
+        ]
+      }
+    },
+    "/raft/join": {
+      "post": {
+        "operationId": "DKV_RaftJoin",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "properties": {}
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/runtimeError"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/protoRaftJoinRequest"
+            }
+          }
+        ],
+        "tags": [
+          "DKV"
+        ]
+      }
+    },
+    "/raft/leave": {
+      "post": {
+        "operationId": "DKV_RaftLeave",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "properties": {}
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/runtimeError"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/protoRaftLeaveRequest"
+            }
+          }
+        ],
+        "tags": [
+          "DKV"
+        ]
+      }
+    },
+    "/raft/status": {
+      "get": {
+        "operationId": "DKV_RaftStatus",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/protoRaftStatusResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/runtimeError"
+            }
+          }
+        },
+        "tags": [
+          "DKV"
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "protoKVDeleteRequest": {
+      "type": "object",
+      "properties": {
+        "key": {
+          "type": "string"
+        }
+      }
+    },
+    "protoKVGetRequest": {
+      "type": "object",
+      "properties": {
+        "key": {
+          "type": "string"
+        }
+      }
+    },
+    "protoKVGetResponse": {
+      "type": "object",
+      "properties": {
+        "value": {
+          "type": "string",
+          "format": "byte"
+        }
+      }
+    },
+    "protoKVPutRequest": {
+      "type": "object",
+      "properties": {
+        "key": {
+          "type": "string"
+        },
+        "value": {
+          "type": "string",
+          "format": "byte"
+        }
+      }
+    },
+    "protoRaftJoinRequest": {
+      "type": "object",
+      "properties": {
+        "node_id": {
+          "type": "string"
+        },
+        "node_address": {
+          "type": "string"
+        }
+      }
+    },
+    "protoRaftLeaveRequest": {
+      "type": "object",
+      "properties": {
+        "node_id": {
+          "type": "string"
+        }
+      }
+    },
+    "protoRaftStatusResponse": {
+      "type": "object",
+      "properties": {
+        "leader_id": {
+          "type": "string"
+        },
+        "leader_address": {
+          "type": "string"
+        },
+        "term": {
+          "type": "string"
+        },
+        "follower_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "follower_addresses": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "protobufAny": {
+      "type": "object",
+      "properties": {
+        "type_url": {
+          "type": "string"
+        },
+        "value": {
+          "type": "string",
+          "format": "byte"
+        }
+      }
+    },
+    "runtimeError": {
+      "type": "object",
+      "properties": {
+        "error": {
+          "type": "string"
+        },
+        "code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "message": {
+          "type": "string"
+        },
+        "details": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/protobufAny"
+          }
+        }
+      }
+    }
+  }
+}
