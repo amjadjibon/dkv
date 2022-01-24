@@ -24,7 +24,7 @@ type DKVClient interface {
 	KVDelete(ctx context.Context, in *KVDeleteRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	RaftJoin(ctx context.Context, in *RaftJoinRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	RaftLeave(ctx context.Context, in *RaftLeaveRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
-	RaftStatus(ctx context.Context, in *RaftStatusRequest, opts ...grpc.CallOption) (*RaftStatusResponse, error)
+	RaftState(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*RaftStateResponse, error)
 }
 
 type dKVClient struct {
@@ -80,9 +80,9 @@ func (c *dKVClient) RaftLeave(ctx context.Context, in *RaftLeaveRequest, opts ..
 	return out, nil
 }
 
-func (c *dKVClient) RaftStatus(ctx context.Context, in *RaftStatusRequest, opts ...grpc.CallOption) (*RaftStatusResponse, error) {
-	out := new(RaftStatusResponse)
-	err := c.cc.Invoke(ctx, "/proto.DKV/RaftStatus", in, out, opts...)
+func (c *dKVClient) RaftState(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*RaftStateResponse, error) {
+	out := new(RaftStateResponse)
+	err := c.cc.Invoke(ctx, "/proto.DKV/RaftState", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -98,7 +98,7 @@ type DKVServer interface {
 	KVDelete(context.Context, *KVDeleteRequest) (*emptypb.Empty, error)
 	RaftJoin(context.Context, *RaftJoinRequest) (*emptypb.Empty, error)
 	RaftLeave(context.Context, *RaftLeaveRequest) (*emptypb.Empty, error)
-	RaftStatus(context.Context, *RaftStatusRequest) (*RaftStatusResponse, error)
+	RaftState(context.Context, *emptypb.Empty) (*RaftStateResponse, error)
 	mustEmbedUnimplementedDKVServer()
 }
 
@@ -121,8 +121,8 @@ func (UnimplementedDKVServer) RaftJoin(context.Context, *RaftJoinRequest) (*empt
 func (UnimplementedDKVServer) RaftLeave(context.Context, *RaftLeaveRequest) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method RaftLeave not implemented")
 }
-func (UnimplementedDKVServer) RaftStatus(context.Context, *RaftStatusRequest) (*RaftStatusResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method RaftStatus not implemented")
+func (UnimplementedDKVServer) RaftState(context.Context, *emptypb.Empty) (*RaftStateResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method RaftState not implemented")
 }
 func (UnimplementedDKVServer) mustEmbedUnimplementedDKVServer() {}
 
@@ -227,20 +227,20 @@ func _DKV_RaftLeave_Handler(srv interface{}, ctx context.Context, dec func(inter
 	return interceptor(ctx, in, info, handler)
 }
 
-func _DKV_RaftStatus_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(RaftStatusRequest)
+func _DKV_RaftState_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(emptypb.Empty)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(DKVServer).RaftStatus(ctx, in)
+		return srv.(DKVServer).RaftState(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/proto.DKV/RaftStatus",
+		FullMethod: "/proto.DKV/RaftState",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(DKVServer).RaftStatus(ctx, req.(*RaftStatusRequest))
+		return srv.(DKVServer).RaftState(ctx, req.(*emptypb.Empty))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -273,8 +273,8 @@ var DKV_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _DKV_RaftLeave_Handler,
 		},
 		{
-			MethodName: "RaftStatus",
-			Handler:    _DKV_RaftStatus_Handler,
+			MethodName: "RaftState",
+			Handler:    _DKV_RaftState_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

@@ -22,6 +22,7 @@ import (
 	"google.golang.org/grpc/grpclog"
 	"google.golang.org/grpc/metadata"
 	"google.golang.org/grpc/status"
+	"google.golang.org/protobuf/types/known/emptypb"
 )
 
 // Suppress "imported and not used" errors
@@ -203,20 +204,20 @@ func local_request_DKV_RaftLeave_0(ctx context.Context, marshaler runtime.Marsha
 
 }
 
-func request_DKV_RaftStatus_0(ctx context.Context, marshaler runtime.Marshaler, client DKVClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq RaftStatusRequest
+func request_DKV_RaftState_0(ctx context.Context, marshaler runtime.Marshaler, client DKVClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+	var protoReq emptypb.Empty
 	var metadata runtime.ServerMetadata
 
-	msg, err := client.RaftStatus(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
+	msg, err := client.RaftState(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
 	return msg, metadata, err
 
 }
 
-func local_request_DKV_RaftStatus_0(ctx context.Context, marshaler runtime.Marshaler, server DKVServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq RaftStatusRequest
+func local_request_DKV_RaftState_0(ctx context.Context, marshaler runtime.Marshaler, server DKVServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+	var protoReq emptypb.Empty
 	var metadata runtime.ServerMetadata
 
-	msg, err := server.RaftStatus(ctx, &protoReq)
+	msg, err := server.RaftState(ctx, &protoReq)
 	return msg, metadata, err
 
 }
@@ -342,7 +343,7 @@ func RegisterDKVHandlerServer(ctx context.Context, mux *runtime.ServeMux, server
 
 	})
 
-	mux.Handle("GET", pattern_DKV_RaftStatus_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("GET", pattern_DKV_RaftState_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		var stream runtime.ServerTransportStream
@@ -353,7 +354,7 @@ func RegisterDKVHandlerServer(ctx context.Context, mux *runtime.ServeMux, server
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := local_request_DKV_RaftStatus_0(rctx, inboundMarshaler, server, req, pathParams)
+		resp, md, err := local_request_DKV_RaftState_0(rctx, inboundMarshaler, server, req, pathParams)
 		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
 		ctx = runtime.NewServerMetadataContext(ctx, md)
 		if err != nil {
@@ -361,7 +362,7 @@ func RegisterDKVHandlerServer(ctx context.Context, mux *runtime.ServeMux, server
 			return
 		}
 
-		forward_DKV_RaftStatus_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_DKV_RaftState_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
@@ -506,7 +507,7 @@ func RegisterDKVHandlerClient(ctx context.Context, mux *runtime.ServeMux, client
 
 	})
 
-	mux.Handle("GET", pattern_DKV_RaftStatus_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("GET", pattern_DKV_RaftState_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
@@ -515,14 +516,14 @@ func RegisterDKVHandlerClient(ctx context.Context, mux *runtime.ServeMux, client
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_DKV_RaftStatus_0(rctx, inboundMarshaler, client, req, pathParams)
+		resp, md, err := request_DKV_RaftState_0(rctx, inboundMarshaler, client, req, pathParams)
 		ctx = runtime.NewServerMetadataContext(ctx, md)
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
 
-		forward_DKV_RaftStatus_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_DKV_RaftState_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
@@ -540,7 +541,7 @@ var (
 
 	pattern_DKV_RaftLeave_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"raft", "leave"}, "", runtime.AssumeColonVerbOpt(true)))
 
-	pattern_DKV_RaftStatus_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"raft", "status"}, "", runtime.AssumeColonVerbOpt(true)))
+	pattern_DKV_RaftState_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"raft", "status"}, "", runtime.AssumeColonVerbOpt(true)))
 )
 
 var (
@@ -554,5 +555,5 @@ var (
 
 	forward_DKV_RaftLeave_0 = runtime.ForwardResponseMessage
 
-	forward_DKV_RaftStatus_0 = runtime.ForwardResponseMessage
+	forward_DKV_RaftState_0 = runtime.ForwardResponseMessage
 )

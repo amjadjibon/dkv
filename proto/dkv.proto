@@ -36,15 +36,8 @@ message RaftLeaveRequest {
   string node_id = 1;
 }
 
-message RaftStatusRequest {
-}
-
-message RaftStatusResponse {
-  string leader_id = 1;
-  string leader_address = 2;
-  string term = 3;
-  repeated string follower_ids = 4;
-  repeated string follower_addresses = 5;
+message RaftStateResponse {
+  string raft_state = 1;
 }
 
 service DKV {
@@ -81,7 +74,7 @@ service DKV {
     };
   }
 
-  rpc RaftStatus(RaftStatusRequest) returns (RaftStatusResponse) {
+  rpc RaftState(google.protobuf.Empty) returns (RaftStateResponse) {
     option (google.api.http) = {
       get: "/raft/status"
     };

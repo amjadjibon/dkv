@@ -173,12 +173,12 @@
     },
     "/raft/status": {
       "get": {
-        "operationId": "DKV_RaftStatus",
+        "operationId": "DKV_RaftState",
         "responses": {
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/protoRaftStatusResponse"
+              "$ref": "#/definitions/protoRaftStateResponse"
             }
           },
           "default": {
@@ -251,29 +251,11 @@
         }
       }
     },
-    "protoRaftStatusResponse": {
+    "protoRaftStateResponse": {
       "type": "object",
       "properties": {
-        "leader_id": {
+        "raft_state": {
           "type": "string"
-        },
-        "leader_address": {
-          "type": "string"
-        },
-        "term": {
-          "type": "string"
-        },
-        "follower_ids": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          }
-        },
-        "follower_addresses": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          }
         }
       }
     },
