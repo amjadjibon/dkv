@@ -12,9 +12,11 @@ import (
 	"github.com/hashicorp/raft"
 	raftboltdb "github.com/hashicorp/raft-boltdb"
 	"github.com/spf13/viper"
+	"google.golang.org/grpc"
 
 	conf2 "github.com/amjadjibon/dkv/conf"
 	"github.com/amjadjibon/dkv/fsm"
+	"github.com/amjadjibon/dkv/proto"
 	"github.com/amjadjibon/dkv/server"
 )
 
@@ -108,7 +110,7 @@ func main() {
 		}
 	}()
 
-	var raftBinAddr = fmt.Sprintf("192.168.0.14:%d", conf.Raft.Port)
+	var raftBinAddr = fmt.Sprintf("localhost:%d", conf.Raft.Port)
 
 	raftConf := raft.DefaultConfig()
 	raftConf.LocalID = raft.ServerID(conf.Raft.NodeId)
@@ -171,7 +173,21 @@ func main() {
 
 	fmt.Println("=========")
 
-	server.Run(badgerDB, raftServer)
+	// server.Run(badgerDB, raftServer)
+
+	lis, err := net.Listen("tcp", ":8080")
+	if err != nil {
+		panic(err)
+	}
+
+	var opts []grpc.ServerOption
+	grpcServer := grpc.NewServer(opts...)
+	proto.RegisterDKVServer(grpcServer, server.New(badgerDB, raftServer))
+
+	err = grpcServer.Serve(lis)
+	if err != nil {
+		panic(err)
+	}
 
 	return
 }

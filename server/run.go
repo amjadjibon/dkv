@@ -1,13 +1,16 @@
 package server
 
 import (
+	"context"
 	"fmt"
 	"net"
+	"net/http"
 	"os"
 	"os/signal"
 	"syscall"
 
 	"github.com/dgraph-io/badger/v3"
+	"github.com/grpc-ecosystem/grpc-gateway/runtime"
 	"github.com/hashicorp/raft"
 	"google.golang.org/grpc"
 
@@ -15,8 +18,7 @@ import (
 )
 
 func Run(db *badger.DB, raft *raft.Raft) {
-	fmt.Println("++++++++++++++++")
-	fmt.Println("server run")
+	fmt.Println("run")
 	lis, err := net.Listen("tcp", ":8080")
 	if err != nil {
 		panic(err)
@@ -25,6 +27,14 @@ func Run(db *badger.DB, raft *raft.Raft) {
 	var opts []grpc.ServerOption
 	grpcServer := grpc.NewServer(opts...)
 	proto.RegisterDKVServer(grpcServer, New(db, raft))
+
+	var mux = runtime.NewServeMux()
+	dialOpts := []grpc.DialOption{grpc.WithInsecure()}
+
+	err = proto.RegisterDKVHandlerFromEndpoint(context.TODO(), mux, ":8080", dialOpts)
+	if err != nil {
+		return
+	}
 
 	// handle signal
 	idleChan := make(chan struct{})
@@ -39,10 +49,18 @@ func Run(db *badger.DB, raft *raft.Raft) {
 	go func() {
 		err = grpcServer.Serve(lis)
 		if err != nil {
-			fmt.Println(err)
-			os.Exit(1)
+			panic(err)
 		}
 	}()
+
+	go func() {
+		err = http.ListenAndServe(":9090", mux)
+		if err != nil {
+			panic(err)
+		}
+	}()
+
+	fmt.Println("=================")
 
 	// Blocking until the shutdown is complete
 	<-idleChan
