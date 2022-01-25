@@ -192,7 +192,13 @@ func (d *DKVServerV1) RaftLeave(ctx context.Context, request *proto.RaftLeaveReq
 	return &emptypb.Empty{}, nil
 }
 
-func (d *DKVServerV1) RaftState(ctx context.Context, request *emptypb.Empty) (*proto.RaftStateResponse, error) {
+func (d *DKVServerV1) RaftState(ctx context.Context, _ *emptypb.Empty) (*proto.RaftStateResponse, error) {
+	if ctx.Err() == context.Canceled {
+		return nil, ctx.Err()
+	}
+	if ctx.Err() == context.DeadlineExceeded {
+		return nil, ctx.Err()
+	}
 	return &proto.RaftStateResponse{RaftState: d.raft.State().String()}, nil
 }
 
