@@ -134,7 +134,7 @@ func (d *DKVServerV1) KVDelete(ctx context.Context, request *proto.KVDeleteReque
 		return nil, errors.New("response not ok")
 	}
 
-	return nil, nil
+	return &emptypb.Empty{}, nil
 }
 
 func (d *DKVServerV1) RaftJoin(ctx context.Context, request *proto.RaftJoinRequest) (*emptypb.Empty, error) {

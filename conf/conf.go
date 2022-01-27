@@ -7,11 +7,12 @@ import (
 )
 
 type EnvironmentConfig struct {
-	LogLevel      string `env:"LOG_LEVEL" envDefault:"info"`
-	ServerPort    int    `env:"SERVER_PORT" envDefault:"8888"`
-	RaftNodeId    string `env:"RAFT_NODE_ID" envDefault:"node_id"`
-	RaftPort      int    `env:"RAFT_PORT" envDefault:"7777"`
-	RaftVolumeDir string `env:"RAFT_VOLUME_DIR" envDefault:"data"`
+	LogLevel       string `env:"LOG_LEVEL" envDefault:"info"`
+	HTTPServerPort int    `env:"HTTP_SERVER_PORT" envDefault:"8888"`
+	GRPCServerPort int    `env:"GRPC_SERVER_PORT" envDefault:"8888"`
+	RaftNodeId     string `env:"RAFT_NODE_ID" envDefault:"node_id"`
+	RaftPort       int    `env:"RAFT_PORT" envDefault:"7777"`
+	RaftVolumeDir  string `env:"RAFT_VOLUME_DIR" envDefault:"data"`
 }
 
 var instantiated *EnvironmentConfig
